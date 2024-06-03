@@ -3,13 +3,9 @@ import { useQuery } from 'react-query';
 import { FetchCoinHistory } from '../Api';
 import ApexChart from 'react-apexcharts';
 
-interface chartProps {
-  coinId: string;
-}
-
-interface IData {
-  time_opne: string;
-  time_close: string;
+interface IHistorical {
+  time_open: number;
+  time_close: number;
   open: number;
   high: number;
   low: number;
@@ -18,11 +14,41 @@ interface IData {
   market_cap: number;
 }
 
-const Chart = ({ coinId }: chartProps) => {
-  const { isLoading, data } = useQuery<IData[]>(['ohlvc', coinId], () =>
+interface ChartProps {
+  coinId: string;
+}
+
+function Chart({ coinId }: ChartProps) {
+  const { isLoading, data } = useQuery<IHistorical[]>(['ohlcv', coinId], () =>
     FetchCoinHistory(coinId)
   );
-  return <></>;
-};
+
+  return (
+    <div>
+      {isLoading ? (
+        'Loading chart...'
+      ) : (
+        <ApexChart
+          series={[
+            {
+              name: 'sales',
+              data: data?.map((price) => price.close) ?? [],
+            },
+          ]}
+          type="line"
+          options={{
+            theme: {
+              mode: 'dark',
+            },
+            chart: {
+              height: 500,
+              width: 500,
+            },
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export default Chart;
