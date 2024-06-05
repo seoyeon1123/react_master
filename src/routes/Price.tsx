@@ -47,6 +47,8 @@ function Price({ coinId }: PriceProps): JSX.Element {
     () => FetchCoinsTickers(coinId)
   );
 
+  if (isLoading || !data) return <div>Loading chart...</div>;
+
   return (
     <div>
       {isLoading ? (

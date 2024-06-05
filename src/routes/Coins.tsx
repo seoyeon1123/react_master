@@ -6,7 +6,7 @@ import { FetchCoins } from '../Api';
 
 const Container = styled.div`
   padding: 0px 10px;
-  max-width: 480px;
+  max-width: 700px;
   margin: 0 auto;
 `;
 
@@ -17,17 +17,28 @@ const Header = styled.header`
   align-items: center;
 `;
 
-const CoinList = styled.ul``;
+const CoinList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
 const Coin = styled.li`
+  width: 150px; /* 가로 크기 */
+  height: 150px; /* 세로 크기 */
   background-color: white;
   color: ${(props) => props.theme.bgColor};
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   a {
     transition: color 0.2s ease-in-out;
-    align-items: center;
-    display: flex;
-    padding: 20px;
+    text-align: center;
+    display: block;
   }
 
   &:hover {
@@ -35,6 +46,11 @@ const Coin = styled.li`
       color: ${(props) => props.theme.accentColor};
     }
   }
+`;
+const Img = styled.img`
+  width: 50px; /* 이미지 크기 조절 */
+  height: 50px; /* 이미지 크기 조절 */
+  margin-bottom: 10px;
 `;
 
 const Title = styled.h1`
@@ -45,12 +61,6 @@ const Title = styled.h1`
 const Loader = styled.span`
   text-align: center;
   display: block;
-`;
-
-const Img = styled.img`
-  width: 35px;
-  height: 35px;
-  margin-right: 10px;
 `;
 
 interface ICoin {
@@ -85,7 +95,8 @@ const Coins = () => {
                 <Img
                   src={`https://cryptoicon-api.pages.dev/api/icon/${coin.symbol.toLowerCase()}`}
                 />
-                {coin.name} &rarr;
+                <br></br>
+                {coin.name}
               </Link>
             </Coin>
           ))}

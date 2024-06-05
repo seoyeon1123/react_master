@@ -203,6 +203,10 @@ function Coin() {
               <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
+              <span>Type:</span>
+              <span>{infoData?.type}</span>
+            </OverviewItem>
+            <OverviewItem>
               <span>Symbol:</span>
               <span>${infoData?.symbol}</span>
             </OverviewItem>
