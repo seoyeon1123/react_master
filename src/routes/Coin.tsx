@@ -1,12 +1,12 @@
 import { useParams } from 'react-router';
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
 import {
   useLocation,
   Switch,
   Route,
   Link,
   useRouteMatch,
+  useHistory,
 } from 'react-router-dom';
 import Price from './Price';
 import Chart from './Chart';
@@ -22,8 +22,21 @@ const Container = styled.div`
 const Header = styled.header`
   height: 10vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* 가운데 정렬과 오른쪽 정렬 간의 공간을 모두 사용 */
   align-items: center;
+`;
+
+const Button = styled.button`
+  background-color: ${(props) => props.theme.bgColor};
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: ${(props) => props.theme.textColor};
+  border: none;
+  cursor: pointer;
+  z-index: 1000; /* 버튼이 다른 요소들 위에 위치하도록 */
+  &:hover {
+    background-color: ${(props) => props.theme.accentColor};
+  }
 `;
 
 const Title = styled.h1`
@@ -151,6 +164,7 @@ function Coin() {
   const { state } = useLocation<RouteState>();
   const priceMatch = useRouteMatch('/:coinId/price');
   const chartMatch = useRouteMatch('/:coinId/chart');
+  const history = useHistory();
 
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ['info', coinId],
@@ -159,8 +173,15 @@ function Coin() {
 
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ['tickers', coinId],
-    () => FetchCoinsTickers(coinId)
+    () => FetchCoinsTickers(coinId),
+    {
+      refetchInterval: 5000,
+    }
   );
+
+  const onClickBtn = () => {
+    history.push('/');
+  };
 
   const loading = infoLoading || tickersLoading;
 
@@ -170,6 +191,7 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
+        <Button onClick={onClickBtn}>Back</Button>
       </Header>
       {infoLoading ? (
         <Loader>Loading...</Loader>
@@ -185,8 +207,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? 'Yes' : 'No'}</span>
+              <span>Price:</span>
+              <span>${tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -213,7 +235,7 @@ function Coin() {
 
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price />
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/:coinId/chart`}>
               <Chart coinId={coinId} />
