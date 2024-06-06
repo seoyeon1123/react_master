@@ -26,8 +26,9 @@ const CoinList = styled.ul`
 const Coin = styled.li`
   width: 150px; /* 가로 크기 */
   height: 150px; /* 세로 크기 */
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
+  border: 1px solid white;
   margin-bottom: 30px;
   border-radius: 15px;
   display: flex;
@@ -73,12 +74,17 @@ interface ICoin {
   type: string;
 }
 
-const Coins = () => {
+interface ICoinsProps {
+  toggleDark: () => void;
+}
+
+const Coins = ({ toggleDark }: ICoinsProps) => {
   const { isLoading, data } = useQuery<ICoin[]>('allCoins', FetchCoins);
   return (
     <Container>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDark}>Toggle Dark Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
