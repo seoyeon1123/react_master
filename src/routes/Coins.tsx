@@ -11,7 +11,7 @@ import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
 const Container = styled.div`
   padding: 0px 10px;
   max-width: 700px;
-  margin: 20px auto;
+  margin: 2git0px auto;
 `;
 
 const Header = styled.header`
