@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { FetchCoins } from '../Api';
+import { isDarkAtom } from '../atoms';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
   padding: 0px 10px;
   max-width: 700px;
-  margin: 0 auto;
+  margin: 20px auto;
 `;
 
 const Header = styled.header`
   height: 10vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* 내부 요소들을 수평으로 정렬 */
   align-items: center;
 `;
 
@@ -57,11 +61,17 @@ const Img = styled.img`
 const Title = styled.h1`
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
+  text-align: center; /* 텍스트를 수평으로 정렬 */
+  margin: 0 auto; /* 가운데 정렬 */
 `;
 
 const Loader = styled.span`
   text-align: center;
   display: block;
+`;
+
+const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
+  font-size: 30px;
 `;
 
 interface ICoin {
@@ -74,17 +84,26 @@ interface ICoin {
   type: string;
 }
 
-interface ICoinsProps {
-  toggleDark: () => void;
-}
+interface ICoinsProps {}
 
-const Coins = ({ toggleDark }: ICoinsProps) => {
+const Coins = () => {
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const [isToggled, setIsToggled] = useState(true);
+
+  const toggleDarkAtom = () => {
+    setIsToggled((prev) => !prev);
+    setDarkAtom((prev) => !prev);
+  };
+
   const { isLoading, data } = useQuery<ICoin[]>('allCoins', FetchCoins);
   return (
     <Container>
       <Header>
         <Title>Coins</Title>
-        <button onClick={toggleDark}>Toggle Dark Mode</button>
+        <CustomFontAwesomeIcon
+          onClick={toggleDarkAtom}
+          icon={isToggled ? faToggleOff : faToggleOn}
+        />
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
@@ -111,4 +130,5 @@ const Coins = ({ toggleDark }: ICoinsProps) => {
     </Container>
   );
 };
+
 export default Coins;
